@@ -3,6 +3,10 @@ The following is an example of a "Stored Procedure"
 */
 
 INSERT INTO customers (fname, lname, username,email) VALUES ("Dr. P", "Brown", "prbrown", "philippa.brown");
+INSERT INTO customers (fname, lname, username,email) VALUES ("Jose", "Torres", "charpie", "charpie@email.com");
+USE db_store;
+
+INSERT INTO customers (fname, lname, username, email) VALUES ("Rose", "Roberts", "rosy", "rosy@email.com");
 SELECT * FROM customers;
 
 DROP PROCEDURE IF EXISTS insertProducts;

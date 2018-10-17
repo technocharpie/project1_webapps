@@ -12,9 +12,7 @@
 	-->
 	<servlet>
 		<servlet-name>jersey-serlvet</servlet-name>
-		<servlet-class>
-                     com.sun.jersey.spi.container.servlet.ServletContainer
-                </servlet-class>
+		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
 		<init-param>
 		     <param-name>com.sun.jersey.config.property.packages</param-name>
 		     <param-value>com.store.rest</param-value>

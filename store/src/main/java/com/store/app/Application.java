@@ -1,3 +1,8 @@
+/*--------------------
+    Web Apps UF Fall 2018, Dr. Brown
+    copyright 2018 Jose Torres (UF ID: 0739-9486)
+--------------------*/
+
 package com.store.app;
 
 import org.slf4j.Logger;
@@ -15,31 +20,39 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/*
-While you are developing your DAO layer, you can configure maven to build a jar file
-and use this class to perform tests, before moving on to implementing the REST layer.
-*/
-
 @SpringBootApplication
-public class Application implements CommandLineRunner {
+public class Application implements CommandLineRunner 
+{
 
     private static final Logger log = LoggerFactory.getLogger(Application.class);
 
-    public static void main(String args[]) {
+
+
+    public static void main(String args[]) 
+    {
         SpringApplication.run(Application.class, args);
     }
+
+
 
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+
+
     @Override
-    public void run(String... strings) throws Exception {
+    public void run(String... strings) throws Exception 
+    {
+        ProductDAO productDAO = new ProductDAO(jdbcTemplate);
 
-        /** TODO:
-			You use the provided .sql scripts to create and populate tables.
-			Then, you can add calls to your CRUD operations from within this method.
-
-		**/
-
+        log.info("\n\n\n");
+        log.info("Selecting product (id = 10): ");
+        log.info(productDAO.select_product(10).toString());
+        log.info("\n\n\n");
+        log.info("Inserting product (name = 'Yeezys', msrp = 69.69, salePrice = 42.0, upc = 138258222, description = 'get boosted', brandName = 'yeet', size = '12', color = 'black', gender = 'male'): ");
+        productDAO.insert_product(new Product("Yeezys", 69.69, 42.0, 138258222, "get boosted", "yeet", "12", "black", "male"));
+        log.info("\n\n\n");
+        log.info("Selecting product (id = 21): ");
+        log.info(productDAO.select_product(21).toString());
     }
 }
