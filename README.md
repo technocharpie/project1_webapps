@@ -3,7 +3,7 @@
 ### Description
 Implement a RESTful Web Service for your online store.  The product and user data is stored on your company's local servers, and you will provide customers the ability to sign up for accounts, search products and place orders.
 
-### Technologies and Languages needed
+### Technologies and Languages used
 1. MySQL - for storing and retrieving data in the to and from your model.
 2. Java
    - JDBC - to connect your Data Access Object layer classes to your MySQL database. 
