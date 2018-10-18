@@ -88,6 +88,28 @@ public class CustomerDAO
 		return customer;
 	}
 
+    public boolean update_customer(Customer customer)
+    {
+        if (customer != null)
+        {
+            String sql_count = "SELECT COUNT(*) FROM customers WHERE username = ?";
+            int    rowCount  = this.jdbcTemplate.queryForObject(sql_count, new Object[] { customer.get_username() }, Integer.class);
+
+            if (rowCount > 0)
+            {
+                String sql      = "UPDATE customers SET fname = ?, lname = ?, email = ? WHERE username = ?;";
+                String fname    = customer.get_f_name();
+                String lname    = customer.get_l_name();
+                String email    = customer.get_email();
+                String username = customer.get_username();
+                this.jdbcTemplate.update(sql, fname, lname, email, username);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
 
     //========== Misc. ==========//

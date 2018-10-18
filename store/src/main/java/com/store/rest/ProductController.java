@@ -34,8 +34,6 @@ import com.store.model.*;
 public class ProductController extends HttpServlet
 {
 
-	
-	//@Autowired
 	private ProductService productService = new ProductService();
 
 	public void init(ServletConfig config) 
@@ -46,20 +44,10 @@ public class ProductController extends HttpServlet
 			  config.getServletContext());
 		}catch(ServletException e){
 		}
-	 }
-		  
-
-	
-	@GET
-	@Path("/hello/{param}")
-	public Response getMsg(@PathParam("param") String msg) 
-	{
-		String output = productService.getMsg(msg);
-
-		return Response.status(200).entity(output).build();
 	}
 
 
+		  
 	@GET
 	@Path("/{id}")
 	public Response select_product(@PathParam("id") int id) 

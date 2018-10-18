@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
@@ -33,8 +34,6 @@ import com.store.model.*;
 public class CustomerController extends HttpServlet
 {
 
-	
-	//@Autowired
 	private CustomerService customerService = new CustomerService();
 
 	public void init(ServletConfig config) 
@@ -45,19 +44,9 @@ public class CustomerController extends HttpServlet
 			  config.getServletContext());
 		}catch(ServletException e){
 		}
-	 }
-		  
-
-	
-	@GET
-	@Path("/hello/{param}")
-	public Response getMsg(@PathParam("param") String msg) 
-	{
-		String output = customerService.getMsg(msg);
-
-		return Response.status(200).entity(output).build();
 	}
 
+	
 
 	@GET
 	@Path("/{username}")
@@ -93,6 +82,25 @@ public class CustomerController extends HttpServlet
 		return Response
 		.status(500)
 	    .entity("Could not add new customer.").build();
+	}
+
+	@PUT
+	public Response update_customer(
+		@QueryParam("fname") String fname,
+		@QueryParam("lname") String lname,
+		@QueryParam("username") String username,
+		@QueryParam("email") String email) 
+	{
+		boolean worked = customerService.update_customer(fname, lname, username, email);
+
+		if (worked)
+			return Response
+			.status(200)
+		    .entity(username + "'s information updated.").build();
+
+		return Response
+		.status(500)
+	    .entity("Could not update customer.").build();
 	}
 
 }

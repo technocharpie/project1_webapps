@@ -30,11 +30,7 @@ public class CustomerService
 
 	public Customer select_customer(String username) 
 	{
-		//String retString = "";
-		Customer customer = customerDAO.select_customer(username);
-		//retString += customer.toString();
-
-		return customer;
+		return customerDAO.select_customer(username);
 	}
 
 	public boolean insert_customer(String fname, String lname, String username, String email) 
@@ -43,5 +39,10 @@ public class CustomerService
 		
 	}
 
+	public boolean update_customer(String fname, String lname, String username, String email) 
+	{
+		return customerDAO.update_customer(new Customer(fname, lname, username, email));
+		
+	}
 
 }
