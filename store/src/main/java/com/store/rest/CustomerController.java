@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
@@ -46,7 +47,7 @@ public class CustomerController extends HttpServlet
 		}
 	}
 
-	
+
 
 	@GET
 	@Path("/{username}")
@@ -101,6 +102,22 @@ public class CustomerController extends HttpServlet
 		return Response
 		.status(500)
 	    .entity("Could not update customer.").build();
+	}
+
+	@DELETE
+	@Path("/{username}")
+	public Response delete_customer(@PathParam("username") String username) 
+	{
+		boolean worked = customerService.delete_customer(username);
+
+		if (worked)
+			return Response
+			.status(200)
+		    .entity(username + "'s information deleted.").build();
+
+		return Response
+		.status(500)
+	    .entity("Could not delete customer.").build();
 	}
 
 }

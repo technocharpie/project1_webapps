@@ -16,21 +16,16 @@ import com.store.dao.*;
 import com.store.model.*;
 
 @Service
-public class ProductService 
+public class CartService 
 {
 	
 	//@Autowired
-	private ProductDAO productDAO = new ProductDAO();
-
-
-	public Product select_product(int id) 
+	private CartDAO cartDAO = new CartDAO();
+	
+	public boolean insert_to_cart(int itemId, String username) 
 	{
-		return productDAO.select_product(id);
-	}
-
-	public Collection<Product> select_all_product() 
-	{
-		return productDAO.select_all_product();
+		return cartDAO.insert_to_cart(itemId, username);
+		
 	}
 
 }

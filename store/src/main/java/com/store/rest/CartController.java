@@ -15,6 +15,8 @@ import org.springframework.http.MediaType;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
@@ -23,19 +25,17 @@ import javax.ws.rs.Produces;
 import java.util.Collection;
 import java.util.ArrayList;
 import org.json.JSONObject;
-import org.json.JSONArray;
-
 
 
 import com.store.dao.*;
 import com.store.model.*;
 
 @Controller
-@Path("/items")
-public class ProductController extends HttpServlet
+@Path("/carts")
+public class CartController extends HttpServlet
 {
 
-	private ProductService productService = new ProductService();
+	private CartService cartService = new CartService();
 
 	public void init(ServletConfig config) 
 	{
@@ -48,49 +48,22 @@ public class ProductController extends HttpServlet
 	}
 
 
-		  
-	@GET
-	@Path("/{id}")
-	public Response select_product(@PathParam("id") int id) 
+
+	@POST
+	public Response insert_to_cart(
+		@QueryParam("productId") int itemId,
+		@QueryParam("username") String username)
 	{
-		Product product = productService.select_product(id);
-		JSONObject json = new JSONObject(product.to_JSON());
+		boolean worked = cartService.insert_to_cart(itemId, username);
 
-
-		if (product != null && product.get_id() != 0)
+		if (worked)
 			return Response
 			.status(200)
-		    .entity(json.toString()).build();
-		
+		    .entity("Item added to cart.").build();
 
 		return Response
-		.status(404)
-		.entity("Product ID: " + id + " not found.").build();
-	}
-
-	@GET
-	public Response select_all_product() 
-	{
-		Collection<Product> products = productService.select_all_product();
-		JSONArray arr = new JSONArray();
-		JSONObject json;
-
-		for (Product product : products)
-		{
-			json = new JSONObject(product.to_JSON());
-			arr.put(json);
-		}
-
-
-		if (products != null)
-			return Response
-			.status(200)
-		    .entity(arr.toString()).build();
-		
-
-		return Response
-		.status(404)
-		.entity("Not able to list items").build();
+		.status(500)
+	    .entity("Could not add new item to cart.").build();
 	}
 
 }

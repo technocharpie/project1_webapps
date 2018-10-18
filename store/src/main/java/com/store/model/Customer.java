@@ -124,7 +124,7 @@ public class Customer
 
     public String to_JSON()
     {
-    	return String.format("{\"id\":%d,\"f_name\":\"%s\",\"l_name\":\"%s\",\"username\":\"%s\",\"email\":\"%s\",\"cart\":\"%s\",\"orders\":\"%s\"}", 
-        	id, f_name, l_name, username, email, cart, orders);
+    	return String.format("{\"id\":%d,\"f_name\":\"%s\",\"l_name\":\"%s\",\"username\":\"%s\",\"email\":\"%s\"}", 
+        	id, f_name, l_name, username, email);
     }
 }

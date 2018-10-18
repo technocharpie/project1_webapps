@@ -101,7 +101,17 @@ public class ProductDAO
 		return product;
 	}
 
+    public Collection<Product> select_all_product()
+    {
+        Collection<Product> products = new ArrayList<Product>();
 
+        this.jdbcTemplate.query(
+                "SELECT * FROM products", new Object[] { },
+                (rs, rowNum) -> this.select_product(rs.getInt("itemId"))
+        ).forEach(product -> products.add(product));
+        
+        return products;
+    }
 
     //========== Misc. ==========//
     public DriverManagerDataSource getDataSource() {

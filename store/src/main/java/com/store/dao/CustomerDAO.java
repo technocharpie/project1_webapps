@@ -103,10 +103,27 @@ public class CustomerDAO
                 String email    = customer.get_email();
                 String username = customer.get_username();
                 this.jdbcTemplate.update(sql, fname, lname, email, username);
+                
                 return true;
             }
         }
 
+        return false;
+    }
+
+    public boolean delete_customer(String username)
+    {
+        String   sql_count = "SELECT COUNT(*) FROM customers WHERE username = ?";
+        int      rowCount  = this.jdbcTemplate.queryForObject(sql_count, new Object[] { username }, Integer.class);
+
+        if (rowCount > 0)
+        {
+            String sql = "DELETE FROM customers WHERE username = ?";
+            this.jdbcTemplate.update(sql, username);
+
+            return true;
+        }
+        
         return false;
     }
 

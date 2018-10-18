@@ -22,11 +22,6 @@ public class CustomerService
 	//@Autowired
 	private CustomerDAO customerDAO = new CustomerDAO();
 	
- 
-	public String getMsg(String msg) 
-	{ 
-		return "Hello : " + msg;
-	}
 
 	public Customer select_customer(String username) 
 	{
@@ -43,6 +38,11 @@ public class CustomerService
 	{
 		return customerDAO.update_customer(new Customer(fname, lname, username, email));
 		
+	}
+
+	public boolean delete_customer(String username) 
+	{
+		return customerDAO.delete_customer(username);
 	}
 
 }
