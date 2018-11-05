@@ -113,6 +113,25 @@ public class ProductDAO
         return products;
     }
 
+    public Collection<Product> search_products(String keyword)
+    {
+        Collection<Product> products = new ArrayList<Product>();
+
+        String sql = "SELECT itemId FROM products WHERE " +
+                                                "( name LIKE '%"              + keyword + "%' " +
+                                                "OR shortDescription LIKE '%" + keyword + "%' " +
+                                                "OR brandName LIKE '%"        + keyword + "%' " +
+                                                "OR size LIKE '%"             + keyword + "%' " +
+                                                "OR color LIKE '%"            + keyword + "%' " +
+                                                "OR gender LIKE '%"           + keyword + "%')";
+
+        this.jdbcTemplate.query(sql, new Object[] { },
+            (rs, rowNum) -> this.select_product(rs.getInt("itemId"))
+        ).forEach(product -> products.add(product));
+        
+        return products;
+    }
+
     //========== Misc. ==========//
     public DriverManagerDataSource getDataSource() {
 		  DriverManagerDataSource dataSource = new DriverManagerDataSource();

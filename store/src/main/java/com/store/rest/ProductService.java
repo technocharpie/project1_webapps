@@ -33,4 +33,9 @@ public class ProductService
 		return productDAO.select_all_product();
 	}
 
+	public Collection<Product> search_products(String keyword) 
+	{
+		return productDAO.search_products(keyword);
+	}
+
 }

@@ -47,8 +47,7 @@ public class ProductController extends HttpServlet
 		}
 	}
 
-
-		  
+  
 	@GET
 	@Path("/{id}")
 	public Response select_product(@PathParam("id") int id) 
@@ -71,7 +70,18 @@ public class ProductController extends HttpServlet
 	@GET
 	public Response select_all_product() 
 	{
-		Collection<Product> products = productService.select_all_product();
+		return multiple_products(productService.select_all_product());
+	}
+
+	@GET
+	@Path("/search/{keyword}")
+	public Response search_products(@PathParam("keyword") String keyword) 
+	{
+		return multiple_products(productService.search_products(keyword));
+	}
+
+	private Response multiple_products(Collection<Product> products)
+	{
 		JSONArray arr = new JSONArray();
 		JSONObject json;
 
@@ -82,7 +92,7 @@ public class ProductController extends HttpServlet
 		}
 
 
-		if (products != null)
+		if (!products.isEmpty())
 			return Response
 			.status(200)
 		    .entity(arr.toString()).build();
@@ -90,7 +100,7 @@ public class ProductController extends HttpServlet
 
 		return Response
 		.status(404)
-		.entity("Not able to list items").build();
+		.entity("No items found.").build();
 	}
 
 }

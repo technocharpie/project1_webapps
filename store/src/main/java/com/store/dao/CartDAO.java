@@ -57,7 +57,7 @@ public class CartDAO
 
             if (rowCount > 0)
             {
-                String sql1   = "SELECT cartId FROM carts WHERE username = ?";
+                String sql1   = "SELECT DISTINCT cartId FROM carts WHERE username = ?";
                 cartId        = Integer.parseInt(this.jdbcTemplate.queryForObject(sql1, new Object[] { username }, String.class));
             }
             else
@@ -75,7 +75,19 @@ public class CartDAO
                 }
             }
 
-            this.jdbcTemplate.update(sql2, cartId, username, itemId, 1);
+            String sql3 = "SELECT COUNT(*) FROM carts WHERE cartId = ? AND username = ? AND itemId = ?";
+            String sql4 = "SELECT count FROM carts WHERE cartId = ? AND username = ? AND itemId = ?";
+            rowCount    = this.jdbcTemplate.queryForObject(sql3, new Object[] { cartId, username, itemId }, Integer.class);
+
+            if (rowCount == 0)
+                this.jdbcTemplate.update(sql2, cartId, username, itemId, 1);
+            else
+            {
+                int item_count = this.jdbcTemplate.queryForObject(sql4, new Object[] { cartId, username, itemId }, Integer.class);
+                ++item_count;
+                String sql5    = "UPDATE carts SET count =" + item_count +" WHERE cartId = ? AND username = ? AND itemId = ?";
+                this.jdbcTemplate.update(sql5, cartId, username, itemId);
+            }
 
             return true;
         }
