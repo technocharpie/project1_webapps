@@ -48,8 +48,6 @@ public class CartController extends HttpServlet
 		}
 	}
 
-
-
 	@POST
 	public Response insert_to_cart(
 		@QueryParam("productId") int itemId,
@@ -70,32 +68,20 @@ public class CartController extends HttpServlet
 	}
 
 	@GET
-	public Response get_cart(
-		@QueryParam("username") String username)
+	public Response get(
+		@QueryParam("username") String username,
+		@QueryParam("productId") int itemId)
 	{
-		int cart_id  = cartService.get_cart_id(username);
+		if (username != null && itemId <= 0)
+			return get_cart(username);
 
-		if (cart_id == 0)
-			return Response
-				.status(500)
-				.entity("No cart for username found.")
-				.build();
-
-		Collection<Product> products = cartService.get_cart_items(cart_id);
-		JSONArray result = new JSONArray();
-		JSONObject json;
-
-		for (Product product : products)
-		{
-			json = new JSONObject(product.to_JSON());
-			result.put(json);
-		}
+		if (username == null && itemId > 0)
+			return get_buyers(itemId);
 
 		return Response
-			.status(200)
-			.entity(result.toString())
+			.status(500)
+			.entity("Invalid parameters.")
 			.build();
-		 
 	}
 
 	@DELETE
@@ -117,4 +103,78 @@ public class CartController extends HttpServlet
 	    	.build();
 	}
 
+	@PUT
+	@Path("/purchase/{cartId}")
+	public Response buy_cart(
+		@PathParam("cartId") int cartId)
+	{
+		boolean cart_exists = cartService.cart_exists(cartId);
+
+		if (!cart_exists)
+			return Response
+				.status(500)
+		    	.entity("No cart found with the specified ID.")
+		    	.build();
+
+		cartService.buy_cart(cartId);
+
+		return Response
+			.status(200)
+	    	.entity("Order processed.")
+	    	.build();
+	}
+
+	public Response get_cart(String username)
+	{
+		int cart_id  = cartService.get_cart_id(username);
+
+		if (cart_id == 0)
+			return Response
+				.status(500)
+				.entity("No cart for username found.")
+				.build();
+
+		Collection<Product> products       = cartService.get_cart_items(cart_id);
+		JSONArray           products_array = new JSONArray();
+		JSONObject          json;
+
+		for (Product product : products)
+		{
+			json = new JSONObject(product.to_JSON());
+			products_array.put(json);
+		}
+
+		json = new JSONObject(); 
+		json.put("cartId", cart_id)
+			.put("items", products_array);
+
+		return Response
+			.status(200)
+			.entity(json.toString())
+			.build();	 
+	}
+
+	public Response get_buyers(int itemId)
+	{
+		Collection<Customer> customers = cartService.get_customers(itemId);
+		if (customers == null)
+			return Response
+				.status(500)
+		    	.entity("No items found in orders.")
+		    	.build();
+
+		JSONArray customers_array = new JSONArray();
+		JSONObject json;
+
+		for (Customer customer : customers)
+		{
+			json = new JSONObject(customer.to_JSON());
+			customers_array.put(json);
+		}
+
+		return Response
+			.status(200)
+			.entity(customers_array.toString())
+			.build();	 
+	}
 }

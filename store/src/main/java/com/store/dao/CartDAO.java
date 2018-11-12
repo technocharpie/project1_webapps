@@ -129,7 +129,30 @@ public class CartDAO
         return false;
     }
     
+    public int get_item_count(int cartId, int itemId)
+    {
+        String sql = "SELECT count FROM carts WHERE cartId = ? AND itemId = ?";
+        
+        return this.jdbcTemplate.queryForObject(sql, new Object[] { cartId, itemId }, Integer.class);
+    }
 
+    public String get_username(int cartId)
+    {
+        String sql = "SELECT DISTINCT username FROM carts WHERE cartId = ?";
+
+        return this.jdbcTemplate.queryForObject(sql, new Object[] { cartId }, String.class);
+    }
+
+    public boolean cart_exists(int cartId)
+    {
+        String sql = "SELECT COUNT(*) FROM carts WHERE cartId = ?";
+
+        int rowCount = this.jdbcTemplate.queryForObject(sql, new Object[] { cartId }, Integer.class);
+
+        if (rowCount == 0)
+            return false;
+        return true;
+    }
 
 
     //========== Misc. ==========//
@@ -141,6 +164,8 @@ public class CartDAO
 		  dataSource.setPassword(dbPassword);
 		  return dataSource;
     }
+
+
 
     //TODO: get_count(String column, String value)
     //TODO: get_count(String column, int value)

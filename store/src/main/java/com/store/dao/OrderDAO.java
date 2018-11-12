@@ -23,7 +23,6 @@ public class OrderDAO
     private static final String url = "jdbc:mysql://localhost:3306/db_store";
     private static final String dbUsername = "springuser";
     private static final String dbPassword = "ThePassword";
-/*
 
     //========== Constructors ==========//
     public OrderDAO() 
@@ -38,80 +37,34 @@ public class OrderDAO
     }
 
 
+
     //========== INSERT / SELECT / UPDATE / DELETE ==========//
     
-    public boolean insert_to_order(Customer customer, Product product, int orderId, int cartId, int itemId, String username)
+    public void insert_to_order(int orderId, String username, int itemId, int count)
     {
-        if (customer.get_username() == username && product.get_id() == itemId)
-        {
-            String sql_count = "SELECT COUNT(*) FROM orders WHERE username = ?";
-            String sql2      = "INSERT INTO orders (orderId, username, itemId, count) VALUES (?, ?, ?, ?);";
-            int    rowCount  = this.jdbcTemplate.queryForObject(sql_count, new Object[] { username }, Integer.class);
-            //int    orderId   = 0;
+        String sql = "INSERT INTO orders (orderId, username, itemId, count) VALUES (?, ?, ?, ?);";
 
-            if (rowCount > 0)
-            {
-                orderId = get_order_id(username);
-            }
-            else
-            {
-                Random rand = new Random();
-                cartId      = rand.nextInt(999) + 1;
-
-                sql_count = "SELECT COUNT(*) FROM carts WHERE cartId = ?";
-                rowCount  = this.jdbcTemplate.queryForObject(sql_count, new Object[] { cartId }, Integer.class);
-
-                while (rowCount > 0)
-                {
-                    cartId   = rand.nextInt(999) + 1;
-                    rowCount = this.jdbcTemplate.queryForObject(sql_count, new Object[] { cartId }, Integer.class);
-                }
-            }
-
-            String sql3 = "SELECT COUNT(*) FROM carts WHERE cartId = ? AND username = ? AND itemId = ?";
-            String sql4 = "SELECT count FROM carts WHERE cartId = ? AND username = ? AND itemId = ?";
-            rowCount    = this.jdbcTemplate.queryForObject(sql3, new Object[] { cartId, username, itemId }, Integer.class);
-
-            if (rowCount == 0)
-                this.jdbcTemplate.update(sql2, cartId, username, itemId, 1);
-            else
-            {
-                int item_count = this.jdbcTemplate.queryForObject(sql4, new Object[] { cartId, username, itemId }, Integer.class);
-                ++item_count;
-                String sql5    = "UPDATE carts SET count =" + item_count +" WHERE cartId = ? AND username = ? AND itemId = ?";
-                this.jdbcTemplate.update(sql5, cartId, username, itemId);
-            }
-
-            return true;
-        }
-        return false;
+        this.jdbcTemplate.update(sql, orderId, username, itemId, count);
     }
 
-    public int get_order_id(String username)
+    public Collection<Customer> get_customers(int itemId, CustomerDAO customerDAO)
     {
-        String sql_count = "SELECT COUNT(*) FROM orders WHERE username = ?";
-        String sql       = "SELECT DISTINCT orderId FROM orders WHERE username = ?";
-        int    rowCount  = this.jdbcTemplate.queryForObject(sql_count, new Object[] { username }, Integer.class);
+        Collection<Customer> customers = new ArrayList<Customer>();;
+        String              sql        = "SELECT COUNT(*) FROM orders WHERE itemId = ?";
 
-        if (rowCount == 0) return 0;
+        if ( (this.jdbcTemplate.queryForObject(sql, new Object[] { itemId }, Integer.class)) == 0)
+            return null;
 
-        return Integer.parseInt(this.jdbcTemplate.queryForObject(sql, new Object[] { username }, String.class));    
-    }
-    //TODO: fix sql
-    public Collection<Product> get_cart_items(int cartId, ProductDAO productDAO)
-    {
-        Collection<Product> products = new ArrayList<Product>();
-
-        String sql1 = "SELECT * FROM carts WHERE cartId = ?";
-        String sql2 = "SELECT * FROM products JOIN (" + sql1 + ")) ON ";
+        sql = "SELECT DISTINCT username FROM orders WHERE itemId = ?";
 
         this.jdbcTemplate.query(
-                sql2, new Object[] { cartId, cartId },
-                (rs, rowNum) -> productDAO.select_product(rs.getInt("itemId"))
-        ).forEach(product -> products.add(product));
+                sql, new Object[] { itemId },
+                (rs, rowNum) -> customerDAO.select_customer(rs.getString("username"))
+        ).forEach(customer -> customers.add(customer));
         
-        return products;
+        return customers;
     }
+
 
 
     //========== Misc. ==========//
@@ -124,6 +77,22 @@ public class OrderDAO
 		  return dataSource;
     }
 
+    public int create_order_id()
+    {
+        Random rand    = new Random();
+        int    orderId = rand.nextInt(999) + 1;
+
+        String sql_count = "SELECT COUNT(*) FROM orders WHERE orderId = ?";
+        int    rowCount  = this.jdbcTemplate.queryForObject(sql_count, new Object[] { orderId }, Integer.class);
+
+        while (rowCount > 0)
+        {
+            orderId  = rand.nextInt(999) + 1;
+            rowCount = this.jdbcTemplate.queryForObject(sql_count, new Object[] { orderId }, Integer.class);
+        }
+
+        return orderId;
+    }
     //TODO: get_count(String column, String value)
-    //TODO: get_count(String column, int value)*/
+    //TODO: get_count(String column, int value)
 }
