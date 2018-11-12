@@ -25,6 +25,7 @@ import javax.ws.rs.Produces;
 import java.util.Collection;
 import java.util.ArrayList;
 import org.json.JSONObject;
+import org.json.JSONArray;
 
 
 import com.store.dao.*;
@@ -58,12 +59,62 @@ public class CartController extends HttpServlet
 
 		if (worked)
 			return Response
-			.status(200)
-		    .entity("Item added to cart.").build();
+				.status(200)
+		    	.entity("Item added to cart.")
+		    	.build();
 
 		return Response
-		.status(500)
-	    .entity("Could not add new item to cart.").build();
+			.status(500)
+	    	.entity("Could not add new item to cart.")
+	    	.build();
+	}
+
+	@GET
+	public Response get_cart(
+		@QueryParam("username") String username)
+	{
+		int cart_id  = cartService.get_cart_id(username);
+
+		if (cart_id == 0)
+			return Response
+				.status(500)
+				.entity("No cart for username found.")
+				.build();
+
+		Collection<Product> products = cartService.get_cart_items(cart_id);
+		JSONArray result = new JSONArray();
+		JSONObject json;
+
+		for (Product product : products)
+		{
+			json = new JSONObject(product.to_JSON());
+			result.put(json);
+		}
+
+		return Response
+			.status(200)
+			.entity(result.toString())
+			.build();
+		 
+	}
+
+	@DELETE
+	public Response delete_item_from_cart(
+		@QueryParam("cartId") int cartId,
+		@QueryParam("productId") int itemId)
+	{
+		boolean worked = cartService.delete_item_from_cart(cartId, itemId);
+
+		if (worked)
+			return Response
+				.status(200)
+		    	.entity("Item removed from cart.")
+		    	.build();
+
+		return Response
+			.status(500)
+	    	.entity("Could remove item from cart.")
+	    	.build();
 	}
 
 }

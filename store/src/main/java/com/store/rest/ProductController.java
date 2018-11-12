@@ -58,13 +58,15 @@ public class ProductController extends HttpServlet
 
 		if (product != null && product.get_id() != 0)
 			return Response
-			.status(200)
-		    .entity(json.toString()).build();
+				.status(200)
+			    .entity(json.toString())
+			    .build();
 		
 
 		return Response
-		.status(404)
-		.entity("Product ID: " + id + " not found.").build();
+			.status(404)
+			.entity("Product ID: " + id + " not found.")
+			.build();
 	}
 
 	@GET
@@ -94,13 +96,15 @@ public class ProductController extends HttpServlet
 
 		if (!products.isEmpty())
 			return Response
-			.status(200)
-		    .entity(arr.toString()).build();
+				.status(200)
+			    .entity(arr.toString())
+			    .build();
 		
 
 		return Response
-		.status(404)
-		.entity("No items found.").build();
+			.status(404)
+			.entity("No items found.")
+			.build();
 	}
 
 }

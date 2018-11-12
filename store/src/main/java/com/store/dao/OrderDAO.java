@@ -16,23 +16,23 @@ import java.util.ArrayList;
 import java.util.Random;
 
 @Repository
-public class CartDAO
+public class OrderDAO
 {
 	private JdbcTemplate jdbcTemplate;
 	private static final String driverClassName = "com.mysql.jdbc.Driver";
     private static final String url = "jdbc:mysql://localhost:3306/db_store";
     private static final String dbUsername = "springuser";
     private static final String dbPassword = "ThePassword";
-
+/*
 
     //========== Constructors ==========//
-    public CartDAO() 
+    public OrderDAO() 
     {
 		this.jdbcTemplate = new JdbcTemplate(this.getDataSource());
     }
 
     //@Autowired	
-    public CartDAO(JdbcTemplate jdbcTemp) 
+    public OrderDAO(JdbcTemplate jdbcTemp) 
     {
         this.jdbcTemplate = jdbcTemp;
     }
@@ -40,18 +40,18 @@ public class CartDAO
 
     //========== INSERT / SELECT / UPDATE / DELETE ==========//
     
-    public boolean insert_to_cart(Customer customer, Product  product, int itemId, String username)
+    public boolean insert_to_order(Customer customer, Product product, int orderId, int cartId, int itemId, String username)
     {
         if (customer.get_username() == username && product.get_id() == itemId)
         {
-            String sql_count = "SELECT COUNT(*) FROM carts WHERE username = ?";
-            String sql2      = "INSERT INTO carts (cartId, username, itemId, count) VALUES (?, ?, ?, ?);";
+            String sql_count = "SELECT COUNT(*) FROM orders WHERE username = ?";
+            String sql2      = "INSERT INTO orders (orderId, username, itemId, count) VALUES (?, ?, ?, ?);";
             int    rowCount  = this.jdbcTemplate.queryForObject(sql_count, new Object[] { username }, Integer.class);
-            int    cartId    = 0;
+            //int    orderId   = 0;
 
             if (rowCount > 0)
             {
-                cartId = get_cart_id(username);
+                orderId = get_order_id(username);
             }
             else
             {
@@ -87,49 +87,31 @@ public class CartDAO
         return false;
     }
 
-    public int get_cart_id(String username)
+    public int get_order_id(String username)
     {
-        String sql_count = "SELECT COUNT(*) FROM carts WHERE username = ?";
-        String sql       = "SELECT DISTINCT cartId FROM carts WHERE username = ?";
+        String sql_count = "SELECT COUNT(*) FROM orders WHERE username = ?";
+        String sql       = "SELECT DISTINCT orderId FROM orders WHERE username = ?";
         int    rowCount  = this.jdbcTemplate.queryForObject(sql_count, new Object[] { username }, Integer.class);
 
         if (rowCount == 0) return 0;
 
         return Integer.parseInt(this.jdbcTemplate.queryForObject(sql, new Object[] { username }, String.class));    
     }
-    
+    //TODO: fix sql
     public Collection<Product> get_cart_items(int cartId, ProductDAO productDAO)
     {
         Collection<Product> products = new ArrayList<Product>();
 
         String sql1 = "SELECT * FROM carts WHERE cartId = ?";
-        String sql2 = "SELECT * FROM products JOIN (" + sql1 + ") cart_select ON products.itemId = cart_select.itemId";
+        String sql2 = "SELECT * FROM products JOIN (" + sql1 + ")) ON ";
 
         this.jdbcTemplate.query(
-                sql2, new Object[] { cartId },
+                sql2, new Object[] { cartId, cartId },
                 (rs, rowNum) -> productDAO.select_product(rs.getInt("itemId"))
         ).forEach(product -> products.add(product));
         
         return products;
     }
-
-    public boolean delete_item_from_cart(int cartId, int itemId)
-    {
-        String sql_count = "SELECT COUNT(*) FROM carts WHERE cartId = ? AND itemId = ?";
-        int    rowCount  = this.jdbcTemplate.queryForObject(sql_count, new Object[] { cartId, itemId }, Integer.class);
-
-        if (rowCount > 0)
-        {
-            String sql = "DELETE FROM carts WHERE cartId = ? AND itemId = ?";
-            this.jdbcTemplate.update(sql, cartId, itemId);
-
-            return true;
-        }
-        
-        return false;
-    }
-    
-
 
 
     //========== Misc. ==========//
@@ -143,5 +125,5 @@ public class CartDAO
     }
 
     //TODO: get_count(String column, String value)
-    //TODO: get_count(String column, int value)
+    //TODO: get_count(String column, int value)*/
 }
