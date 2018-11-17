@@ -1,3 +1,56 @@
-<html>
-  <h1>Store RESTful Web Service</h1>
+<!--------------------
+    Web Apps UF Fall 2018, Dr. Brown
+    copyright 2018 Jose Torres (UF ID: 0739-9486)
+-------------------->
+
+<!DOCTYPE html>
+<html lang = "eng">
+  	<head>
+  		<title>Online Store, Web Apps UF '18</title>
+	  	<meta charset = "UTF-8">
+	  	<meta name="description" content="Online Store for Personal Project #2, Web Apps UF '18">
+	  	<meta name="author" content="Jose Torres - 0739-9486">
+	  	<link href = "css/main.css" type = "text/css" rel = "stylesheet" /> 
+	  	<!--script src="js/DataController.js"></script-->
+	</head>
+	<body>
+		<div class = "container">
+
+			<div class = "login-signup" id = "login">
+				<div class = "forms">
+					<h1>Welcome back</h1>
+					<form action = "action_page.php">
+						<ul>
+							<li><input type = "text" placeholder = "Username" name="username" required></li>
+						</ul>
+		    			<button type = "submit" id = "login-button">Login!</button>
+					</form>
+				</div>
+			</div>
+
+			<div class = "login-signup" id = "signup">
+				<div class = "forms">
+					<h1>New customer?</h1>
+					<form action = "action_page.php">
+						<ul>
+							<li><input type = "text" placeholder = "Username" name="username" required></li>
+							<li><input type = "text" placeholder = "First name" name="fname" required></li>
+							<li><input type = "text" placeholder = "Last name" name="lname" required></li>
+							<li><input type = "text" placeholder = "Email" name="email" required></li>
+						</ul>
+
+		    			<button type = "submit" id = "signup-button">Sign Up!</button>
+					</form>
+				</div>
+			</div>
+
+		</div>
+
+  		
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src = "js/init.js"></script>
+
+
+	</body>
 </html>
