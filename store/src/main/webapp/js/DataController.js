@@ -12,9 +12,21 @@ DataController.prototype.setBaseUrl = function() {
 	this.baseUrl = document.baseURI;
 }
 
+DataController.prototype.username_check = function(username, callBackFunction) {
+	const url = this.baseUrl + "store/customers/" + username;
+	this.getData(url, callBackFunction);
+}
+
+DataController.prototype.new_user_check = function(username, fname, lname, email, callBackFunction) {
+	const url = this.baseUrl + "store/customers?fname=" + fname + 
+												"&lname=" + lname + 
+												"&username=" + username + 
+												"&email=" + email;
+	this.postData(url, callBackFunction);
+}
 
 
-
+/*
 
 
 DataController.prototype.getAlbumTitles = function(callBackFunction){
@@ -40,10 +52,10 @@ DataController.prototype.getAlbumById = function(id, callBackFunction){
 
 }
 
+*/
 
 
-
-
+//GET
 DataController.prototype.getData = function(url, callBackFunction)
 {
 	  var xhttp = new XMLHttpRequest();
@@ -52,17 +64,55 @@ DataController.prototype.getData = function(url, callBackFunction)
 	  {
 		if (this.readyState == 4 && this.status == 200) 
 		{
-			console.log("txt",this.responseText);
-
-			var jsonData = JSON.parse(this.responseText);
+			console.log("txt", this.responseText);
 
 			if(callBackFunction != null){
-				callBackFunction(jsonData);
+				callBackFunction(this.responseText);
+			}
+		}
+
+		if (this.readyState == 4 && this.status == 404) 
+		{
+			console.log("txt", this.responseText);
+
+			if(callBackFunction != null){
+				callBackFunction("");
 			}
 		}
 	  };
 	  
 	  console.log("url",url);
 	  xhttp.open("GET", url, true);
+	  xhttp.send();
+}
+
+//GET
+DataController.prototype.postData = function(url, callBackFunction)
+{
+	  var xhttp = new XMLHttpRequest();
+
+	  xhttp.onreadystatechange = function()
+	  {
+		if (this.readyState == 4 && this.status == 200) 
+		{
+			console.log("txt", this.responseText);
+
+			if(callBackFunction != null){
+				callBackFunction(this.responseText);
+			}
+		}
+
+		if (this.readyState == 4 && this.status == 500) 
+		{
+			console.log("txt", this.responseText);
+
+			if(callBackFunction != null){
+				callBackFunction("");
+			}
+		}
+	  };
+	  
+	  console.log("url",url);
+	  xhttp.open("POST", url, true);
 	  xhttp.send();
 }

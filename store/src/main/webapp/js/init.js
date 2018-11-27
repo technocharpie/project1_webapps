@@ -4,7 +4,15 @@
 --------------------*/
 
 (function() {
-	var dc = new DataController(true); //true ==> use local API
+	var dc = new DataController(); //true ==> use local API
+
+	var username_check = function(user) {
+		var detailDiv = document.getElementById("user");
+		var propNode = document.createElement("div");
+		var textNode = document.createTextNode(this.responseText);
+		propNode.appendChild(textNode);
+		detailDiv.appendChild(propNode);
+	}
 
 	/**Define what to do with the album titles list */
 	var populateAlbumList = function (albums){
@@ -126,5 +134,11 @@
 	function after data is successfully returned.*/
     dc.getAllAlbums(populateAlbumList);
 
+
+   
+
+
     
 })();
+
+

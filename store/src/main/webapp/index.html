@@ -11,35 +11,44 @@
 	  	<meta name="description" content="Online Store for Personal Project #2, Web Apps UF '18">
 	  	<meta name="author" content="Jose Torres - 0739-9486">
 	  	<link href = "css/main.css" type = "text/css" rel = "stylesheet" /> 
-	  	<!--script src="js/DataController.js"></script-->
+	  	<script src="js/DataController.js"></script>
 	</head>
 	<body>
 		<div class = "container">
 
-			<div class = "login-signup" id = "login">
+			<div class = "login-signup">
 				<div class = "forms">
 					<h1>Welcome back</h1>
-					<form action = "action_page.php">
-						<ul>
-							<li><input type = "text" placeholder = "Username" name="username" required></li>
-						</ul>
-		    			<button type = "submit" id = "login-button">Login!</button>
+					<form id = "login">
+						<div>
+							<input type = "text" placeholder = "Username" name="username" required>
+						</div>
+						<div>
+		    				<button type = "submit" id = "login-button">Login!</button>
+		    			</div>
 					</form>
 				</div>
 			</div>
-
-			<div class = "login-signup" id = "signup">
+			<div class = "login-signup">
 				<div class = "forms">
 					<h1>New customer?</h1>
-					<form action = "action_page.php">
-						<ul>
-							<li><input type = "text" placeholder = "Username" name="username" required></li>
-							<li><input type = "text" placeholder = "First name" name="fname" required></li>
-							<li><input type = "text" placeholder = "Last name" name="lname" required></li>
-							<li><input type = "text" placeholder = "Email" name="email" required></li>
-						</ul>
-
-		    			<button type = "submit" id = "signup-button">Sign Up!</button>
+					<form id = "signup" action = "/customers">
+						<div>
+							<input type = "text" placeholder = "Username" name="username" required>
+						</div>
+						<div>
+							<input type = "text" placeholder = "First name" name="fname" required>
+						</div>
+						<div>
+							<input type = "text" placeholder = "Last name" name="lname" required>
+						</div>
+						<div>
+							<input type = "email" placeholder = "Email" name="email" required>
+						</div>
+						
+						<div>
+		    				<button type = "submit" id = "signup-button">Sign Up!</button>
+		    			</div>
 					</form>
 				</div>
 			</div>
@@ -49,7 +58,81 @@
   		
 
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-		<script src = "js/init.js"></script>
+		<script type="text/javascript">
+
+			const dc = new DataController();
+
+			const username_check = function(user) {
+				if (user != "")
+				{
+					const username = JSON.parse(user).username;
+					setCookie("ONLINE-STORE", username, 1);
+					console.log(getCookie("ONLINE-STORE"));
+					//window.location.href = "http://charpie.info/";
+				}
+				else
+					window.alert("No such username");
+			}
+
+			const new_user_check = function(username) {
+				if (username != "")
+				{
+					setCookie("ONLINE-STORE", username, 1);
+					console.log(getCookie("ONLINE-STORE"));
+					//window.location.href = "http://charpie.info/";
+				}
+				else
+					window.alert("Invalid input");
+			}
+
+			const setCookie = function(cname, cvalue, exdays) {
+			    const date = new Date(); //Create an date object
+			    date.setTime(date.getTime() + (exdays*1000*60*60*24));
+			    const expires = "expires=" + date.toGMTString();
+			    window.document.cookie = cname+"="+cvalue+"; "+expires;
+			}
+
+			const getCookie = function(cname) {
+			    const name = cname + "="; 
+			    const cArr = window.document.cookie.split(';'); 
+			     
+			   	for(var i = 0; i < cArr.length; i++) {
+			        var cookie = cArr[i].trim();
+			        if (cookie.indexOf(name) == 0) 
+			            return cookie.substring(name.length, cookie.length);
+			    }
+			     
+			    return "";
+			}
+
+
+			$("#login").submit(function(event) {
+				/* stop form from submitting normally */
+				event.preventDefault();
+
+				/* get some values from elements on the page: */
+				var $form = $(this),
+				    username = $form.find('input[name="username"]').val();
+
+				dc.username_check(username, username_check);
+
+		    });
+
+		    $("#signup").submit(function(event) {
+				/* stop form from submitting normally */
+				event.preventDefault();
+
+				/* get some values from elements on the page: */
+				var $form = $(this),
+				    username = $form.find('input[name="username"]').val(),
+				    fname    = $form.find('input[name="fname"]').val(),
+				    lname    = $form.find('input[name="lname"]').val(),
+				    email    = $form.find('input[name="email"]').val();
+
+				dc.new_user_check(username, fname, lname, email, new_user_check);
+
+		    });
+		</script>
 
 
 	</body>

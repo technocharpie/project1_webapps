@@ -78,7 +78,7 @@ public class CustomerController extends HttpServlet
 		if (worked)
 			return Response
 			.status(200)
-		    .entity("New customer added.").build();
+		    .entity(username).build();
 
 		return Response
 		.status(500)
